@@ -1,9 +1,10 @@
 {
-  "name": "config",
+  "name": "lint",
   "version": "0.0.0",
+  "private": true,
   "main": "index.js",
-  "license": "MIT",
   "files": [
+    "prettierrc.js",
     "eslint-preset.js"
   ],
   "dependencies": {
