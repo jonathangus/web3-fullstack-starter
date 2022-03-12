@@ -1,5 +1,5 @@
 {
-  "name": "anotherblock-monorepo",
+  "name": "web3-fullstack-starter",
   "version": "0.0.0",
   "private": true,
   "workspaces": [

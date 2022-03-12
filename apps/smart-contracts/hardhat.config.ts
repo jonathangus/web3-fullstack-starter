@@ -21,17 +21,26 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
   }
 });
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
-
 const config: HardhatUserConfig = {
   solidity: '0.8.4',
+  defaultNetwork: 'hardhat',
+
   networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || '',
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+    hardhat: {
+      chainId: 1337,
     },
+    localhost: {
+      url: 'http://127.0.0.1:8545',
+      saveDeployments: true,
+    },
+  },
+  namedAccounts: {
+    deployer: {
+      default: 0,
+    },
+  },
+  paths: {
+    deployments: '../../packages/web3-config/deployments',
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,
@@ -40,6 +49,10 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
+  typechain: {
+    outDir: '../../packages/web3-config/typechain',
+  },
+
   abiExporter: {
     path: './abi',
     clear: true,

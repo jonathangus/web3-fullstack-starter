@@ -1,19 +1,28 @@
-import { expect } from "chai";
-import { ethers } from "hardhat";
+import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
+import { expect } from 'chai';
+import { BigNumber } from 'ethers';
+import { ethers } from 'hardhat';
+import { Counter } from 'web3-config';
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe('Counter', function () {
+  let counter: Counter;
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
+  let owner: SignerWithAddress;
+  let addr1: SignerWithAddress;
+  let addr2: SignerWithAddress;
+  let addrs: SignerWithAddress[];
 
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
+  beforeEach(async () => {
+    [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
 
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
+    const CounterContract = await ethers.getContractFactory('Counter');
+    counter = (await CounterContract.deploy()) as Counter;
+    await counter.deployed();
+  });
 
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  describe('deployment', async () => {
+    it('should deploy', async () => {
+      expect(0).to.eq(0);
+    });
   });
 });
