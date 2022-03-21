@@ -1,13 +1,14 @@
-import * as dotenv from 'dotenv';
-
-import { HardhatUserConfig, task } from 'hardhat/config';
+import '@nomiclabs/hardhat-ethers';
+import 'hardhat-deploy-ethers';
 import '@nomiclabs/hardhat-etherscan';
 import '@nomiclabs/hardhat-waffle';
-
 import '@typechain/hardhat';
 import 'hardhat-gas-reporter';
 import 'hardhat-deploy';
 import 'hardhat-abi-exporter';
+
+import * as dotenv from 'dotenv';
+import { HardhatUserConfig, task } from 'hardhat/config';
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ task('accounts', 'Prints the list of accounts', async (taskArgs, hre) => {
   }
 });
 
+const INFURA_KEY = process.env.INFURA_ID;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+
 const config: HardhatUserConfig = {
   solidity: '0.8.4',
   defaultNetwork: 'hardhat',
@@ -28,7 +32,15 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       chainId: 1337,
+      mining: {
+        auto: true,
+        interval: 5000,
+      },
     },
+    // rinkeby: {
+    //   url: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
+    //   accounts: [`${PRIVATE_KEY}`],
+    // },
     localhost: {
       url: 'http://127.0.0.1:8545',
       saveDeployments: true,
@@ -43,7 +55,7 @@ const config: HardhatUserConfig = {
     deployments: '../../packages/web3-config/deployments',
   },
   gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
+    enabled: true,
     currency: 'USD',
   },
   etherscan: {
@@ -51,6 +63,9 @@ const config: HardhatUserConfig = {
   },
   typechain: {
     outDir: '../../packages/web3-config/typechain',
+
+    target: 'ethers-v5',
+    alwaysGenerateOverloads: true,
   },
 
   abiExporter: {

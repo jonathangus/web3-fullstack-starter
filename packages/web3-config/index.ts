@@ -1,32 +1,36 @@
+import multicallDeploymentLocalhost from './deployments/localhost/Multicall2.json';
 import counterDeploymentLocalhost from './deployments/localhost/Counter.json';
 export * from './typechain';
 import * as _typechain from './typechain';
 
+import { Multicall2__factory, Counter__factory } from './typechain';
+
 export enum Chains {
   LOCALHOST = 1337,
+  // RINKEBY = 4,
 }
 
 export const typechain = _typechain;
 
-export const RPC_URL = {};
+export type AvailableContracts =
+  | Multicall2__factory['contractName']
+  | Counter__factory['contractName'];
 
-export enum Contracts {
-  Counter = 'Counter',
-}
+type AddressObj = Record<AvailableContracts, string>;
 
-export type Factory = typeof _typechain[`${Contracts}__factory`];
+const _multicall2 = new Multicall2__factory();
+const _counter = new Counter__factory();
 
-export const Address: Record<Chains, any> = {
+export const Address: Record<Chains, AddressObj> = {
   [Chains.LOCALHOST]: {
-    [Contracts.Counter]: counterDeploymentLocalhost.address,
+    [_multicall2.contractName]: multicallDeploymentLocalhost.address,
+    [_counter.contractName]: counterDeploymentLocalhost.address,
   },
 };
 
-export const abi: Record<Chains, any> = {
-  [Chains.LOCALHOST]: {
-    [Contracts.Counter]: counterDeploymentLocalhost.abi,
-  },
-};
+export const getAddress = (
+  chain: Chains,
+  contract: AvailableContracts
+): string => Address[chain][contract];
 
-export const getAddress = (chain: Chains, contract: Contracts): string =>
-  Address[chain][contract];
+export type Factory = any;

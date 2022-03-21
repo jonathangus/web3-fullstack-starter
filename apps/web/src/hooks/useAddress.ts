@@ -1,7 +1,17 @@
-import { getAddress, Chains, Contracts } from 'web3-config';
+import { AvailableContracts, getAddress } from 'web3-config';
 
-const useAddress = (contract: Contracts): string => {
-  return getAddress(Chains.LOCALHOST, contract);
+import { config } from '../config/config';
+import useCorrectChain from './useCorrectChain';
+
+const useAddress = (contract: string | any): string => {
+  const { isSupported, currentChainId } = useCorrectChain();
+  const contractName =
+    typeof contract === 'string' ? contract : new contract().contractName;
+
+  return getAddress(
+    isSupported && currentChainId ? currentChainId : config.defaultChain,
+    contractName as AvailableContracts
+  );
 };
 
 export default useAddress;

@@ -1,5 +1,3 @@
-import { Factory } from 'web3-config';
-
 export type MulticallStateOptions = {
   method: string;
   address: string;

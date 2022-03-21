@@ -34,6 +34,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.5.0",
     "@typechain/ethers-v5": "^9.0.0",
-    "@typechain/hardhat": "^5.0.0"
+    "@typechain/hardhat": "^5.0.0",
+    "hardhat-deploy-ethers": "^0.3.0-beta.13"
   }
 }

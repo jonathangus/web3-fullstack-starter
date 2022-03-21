@@ -1,22 +1,25 @@
-import { Provider, chain, Connector, defaultChains, Chain } from 'wagmi';
-import { FC } from 'react';
 import { ethers, providers } from 'ethers';
-
+import { FC } from 'react';
+import { Chain, chain, Connector, Provider } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { Chains } from 'web3-config';
 
-const defaultChain = chain.rinkeby;
+import { config } from '../config/config';
 
-const chains: Chain[] = [
-  ...defaultChains,
-  {
-    blockExplorers: [],
-    id: Chains.LOCALHOST,
-    name: 'Localhost',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    rpcUrls: [`http://localhost:8545`],
-  },
-];
+const RPC_URL: Record<Chains, string> = {
+  [Chains.LOCALHOST]: 'http://localhost:8545',
+  // [Chains.RINKEBY]: `https://rinkeby.infura.io/v3/${config.INFURA_ID}`,
+};
+
+const localhostChain = {
+  blockExplorers: chain.rinkeby.blockExplorers,
+  id: Chains.LOCALHOST,
+  name: 'Localhost',
+  rpcUrls: [RPC_URL[Chains.LOCALHOST]],
+};
+
+const chains: Chain[] = [localhostChain];
+const defaultChain = localhostChain;
 
 export const METAMASK_CONNECTOR = new InjectedConnector({
   chains,
@@ -29,16 +32,25 @@ const connectors = () => [
 ];
 
 type ProviderConfig = { chainId?: number; connector?: Connector };
-const validChains = [Chains.LOCALHOST];
+const validChains = [
+  Chains.LOCALHOST,
+  //Chains.RINKEBY
+];
 
 const provider = ({ chainId }: ProviderConfig) => {
-  if (chainId === chain.localhost.id || !chainId) {
-    return new ethers.providers.JsonRpcProvider('http://127.0.0.1:8545/');
+  const wantedChain = validChains.includes(chainId as any)
+    ? chainId
+    : defaultChain.id;
+
+  const rpcUrl = RPC_URL[wantedChain];
+
+  if (rpcUrl) {
+    return new ethers.providers.JsonRpcProvider(rpcUrl);
   }
 
-  return providers.getDefaultProvider(
-    validChains.includes(chainId as any) ? chainId : defaultChain.id
-  );
+  return providers.getDefaultProvider(wantedChain, {
+    infura: config.INFURA_ID,
+  });
 };
 
 const WagmiProvider: FC = ({ children }) => (

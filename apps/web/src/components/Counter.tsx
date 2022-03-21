@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useAccount } from 'wagmi';
-import { Contracts, Counter } from 'web3-config';
+import { Counter__factory } from 'web3-config';
 import useAddress from '../hooks/useAddress';
 import useReadContract from '../hooks/useReadContract';
 import useWriteContract from '../hooks/useWriteContract';
@@ -9,24 +9,20 @@ const Counter: FC = () => {
   const [{ data: accountData }] = useAccount({
     fetchEns: true,
   });
-  const { data, error } = useReadContract<Counter>(
-    Contracts.Counter,
-    'getCount',
-    {
-      args: [accountData?.address],
-      enabled: !!accountData?.address,
-    }
-  );
+  const { data, error } = useReadContract(Counter__factory, 'getCount', {
+    params: [accountData?.address as string],
+    enabled: !!accountData?.address,
+  });
 
-  const counterAddress = useAddress(Contracts.Counter);
+  const counterAddress = useAddress(Counter__factory);
   const [increaseState, increase] = useWriteContract(
-    Contracts.Counter,
+    Counter__factory,
     'incrementCounter',
     {
       onSuccessRefetch: {
         address: counterAddress,
         method: 'getCount',
-        args: [accountData?.address],
+        params: [accountData?.address as string],
       },
     }
   );

@@ -1,35 +1,59 @@
-import { Contracts, typechain } from 'web3-config';
+import { Contract } from '@ethersproject/contracts';
+import { useEffect } from 'react';
+
+import {
+  Awaited,
+  ContractFactory,
+  ContractFunctions,
+  ContractInstance,
+} from '../config/types';
 import useAddress from './useAddress';
 import useMulticallState from './useMulticallState';
+import useNotice from './useNotice';
 
-type PromiseResolvedType<T> = T extends Promise<infer R> ? R : never;
-type ReturnedPromiseResolvedType<T> = PromiseResolvedType<ReturnType<T>>;
-
-function useReadContract<T extends { functions: any }>(
-  contract: Contracts,
-  method: keyof T['functions'],
-  options?: { args: [any]; enabled?: boolean }
+export function useReadContract<
+  T extends ContractInstance = Contract,
+  TFunctionName extends string & keyof ContractFunctions<T> = string
+>(
+  typechainFactory: ContractFactory<T>,
+  method: TFunctionName,
+  options?: {
+    params?: Parameters<ContractFunctions<T>[TFunctionName]>;
+    enabled?: boolean;
+    address?: string;
+    onSuccessMessage?: () => string;
+    onErrorMessage?: (error: Error) => string;
+  }
 ): {
-  data: ReturnedPromiseResolvedType<
-    T['functions'][keyof T['functions']]
-  > | void;
+  data: Awaited<ReturnType<ContractFunctions<T>[TFunctionName]>>;
   error: Error;
   loading: boolean;
 } {
-  const args = options?.args || [];
-  const enabled = options?.enabled ?? true;
-  const address = useAddress(contract);
-  const factory = typechain[`${contract}__factory`];
+  const predefinedAddress = useAddress(typechainFactory);
+  const params = options?.params || [];
+  const address = options?.address || predefinedAddress;
+  const enabled = (options?.enabled ?? true) && Boolean(address);
+
+  const notice = useNotice();
 
   const value = useMulticallState(
     {
-      method,
+      method: method as string,
       address,
-      args,
+      args: params,
       enabled,
     },
-    factory
+    typechainFactory
   );
+
+  useEffect(() => {
+    if (value.error && options?.onErrorMessage) {
+      notice({
+        status: 'error',
+        message: options.onErrorMessage(value.error),
+      });
+    }
+  }, [value.error]);
 
   return value;
 }

@@ -68,21 +68,46 @@ export interface Counter extends BaseContract {
   functions: {
     getCount(user: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    "getCount(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     incrementCounter(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    "incrementCounter()"(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  "getCount(address)"(
+    user: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   incrementCounter(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  "incrementCounter()"(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCount(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     incrementCounter(overrides?: CallOverrides): Promise<void>;
+
+    "incrementCounter()"(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {};
@@ -90,7 +115,16 @@ export interface Counter extends BaseContract {
   estimateGas: {
     getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    "getCount(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     incrementCounter(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    "incrementCounter()"(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -101,7 +135,16 @@ export interface Counter extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    "getCount(address)"(
+      user: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     incrementCounter(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    "incrementCounter()"(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
