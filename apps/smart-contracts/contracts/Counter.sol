@@ -11,4 +11,8 @@ contract Counter {
     function getCount(address user) public view returns (int256) {
         return count[user];
     }
+
+    function currentTimestamp() public view returns (uint256) {
+        return block.timestamp;
+    }
 }

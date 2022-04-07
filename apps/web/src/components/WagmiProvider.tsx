@@ -8,18 +8,21 @@ import { config } from '../config/config';
 
 const RPC_URL: Record<Chains, string> = {
   [Chains.LOCALHOST]: 'http://localhost:8545',
-  // [Chains.RINKEBY]: `https://rinkeby.infura.io/v3/${config.INFURA_ID}`,
+  [Chains.RINKEBY]: `https://rinkeby.infura.io/v3/${config.INFURA_ID}`,
 };
 
+// This can be configured to multiple chain if you looking to support that
 const localhostChain = {
-  blockExplorers: chain.rinkeby.blockExplorers,
   id: Chains.LOCALHOST,
   name: 'Localhost',
   rpcUrls: [RPC_URL[Chains.LOCALHOST]],
 };
 
-const chains: Chain[] = [localhostChain];
-const defaultChain = localhostChain;
+const chains: Chain[] =
+  config.defaultChain == Chains.LOCALHOST ? [localhostChain] : [chain.rinkeby];
+
+const defaultChain =
+  config.defaultChain == Chains.LOCALHOST ? localhostChain : chain.rinkeby;
 
 export const METAMASK_CONNECTOR = new InjectedConnector({
   chains,
@@ -32,10 +35,7 @@ const connectors = () => [
 ];
 
 type ProviderConfig = { chainId?: number; connector?: Connector };
-const validChains = [
-  Chains.LOCALHOST,
-  //Chains.RINKEBY
-];
+const validChains = [Chains.LOCALHOST, Chains.RINKEBY];
 
 const provider = ({ chainId }: ProviderConfig) => {
   const wantedChain = validChains.includes(chainId as any)

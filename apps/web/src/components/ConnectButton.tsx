@@ -38,8 +38,7 @@ const Web3ConnectButton: FC = () => {
 
   if (accountData) {
     return (
-      <Button onClick={() => disconnect()} auto>
-        {/* {formatAddressToShort(user.attributes.ethAddress)} */}
+      <Button onClick={() => disconnect()}>
         {accountData.ens?.name || formatAddressToShort(accountData.address)}
       </Button>
     );
@@ -49,9 +48,6 @@ const Web3ConnectButton: FC = () => {
     <div>
       {data.connectors.map((connector) => (
         <Button
-          shadow
-          color="gradient"
-          auto
           key={connector.id}
           onClick={() => {
             if (!connector.ready) {

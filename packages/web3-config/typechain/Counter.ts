@@ -19,16 +19,25 @@ import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 export interface CounterInterface extends utils.Interface {
   contractName: "Counter";
   functions: {
+    "currentTimestamp()": FunctionFragment;
     "getCount(address)": FunctionFragment;
     "incrementCounter()": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "currentTimestamp",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "getCount", values: [string]): string;
   encodeFunctionData(
     functionFragment: "incrementCounter",
     values?: undefined
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "currentTimestamp",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getCount", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "incrementCounter",
@@ -66,6 +75,10 @@ export interface Counter extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    currentTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    "currentTimestamp()"(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getCount(user: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     "getCount(address)"(
@@ -81,6 +94,10 @@ export interface Counter extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  currentTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+
+  "currentTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
 
   getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -98,6 +115,10 @@ export interface Counter extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    currentTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "currentTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "getCount(address)"(
@@ -113,6 +134,10 @@ export interface Counter extends BaseContract {
   filters: {};
 
   estimateGas: {
+    currentTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+
+    "currentTimestamp()"(overrides?: CallOverrides): Promise<BigNumber>;
+
     getCount(user: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     "getCount(address)"(
@@ -130,6 +155,12 @@ export interface Counter extends BaseContract {
   };
 
   populateTransaction: {
+    currentTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "currentTimestamp()"(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getCount(
       user: string,
       overrides?: CallOverrides

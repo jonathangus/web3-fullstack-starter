@@ -1,15 +1,30 @@
-# Turborepo starter
+# Web3 fullstack starter
 
-This is an official Yarn v1 starter turborepo.
+My ideal monorepo setup for working with fullstack web3 development. Can be used for quick prototyping or built on top on for production ready projects.
 
-## What's inside?
+### Core packages
+- `ethers`
+- `wagmi`
+- `hardhat`
+- `next.js`
+- `typechain`
+- `zustand`
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+### Features?
+- built on top of wagmi (❤️) with recognisable api
+- write and read hooks are typesafe
+- when doing a read transaction it executes and store the arguments
+- refetches all data on each new block with multicalls
+- when doing write transactions you can set a read method that you want to be executed on success for faster ui changes. ex {method: 'increment', onSuccess: 'getCount'}
+- sync deployments to frontend so you dont manually have to update addresses
+- no theming or css 
+- zustand for state
+
 
 ### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org) app
 - `web`: another [Next.js](https://nextjs.org) app
+- `smart-contracts`: smart contracts with hardhat
+- `web3-config`: deployments, generated types from contract and common web3 config
 - `ui`: a stub React component library shared by both `web` and `docs` applications
 - `config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `tsconfig`: `tsconfig.json`s used throughout the monorepo
